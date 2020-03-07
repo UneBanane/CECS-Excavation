@@ -1,30 +1,25 @@
 package Excavation;
 
-import java.util.ArrayList;
-
 /**
  * Excavation
  */
 public class Excavation {
 	static ExcavationMap map = null;
-	static ArrayList<String> rawMap = new ArrayList<String>();
+	static _File rawMap = null;
 
 	public static void main(String[] args) {
-		int len;
 		String inputFile;
 
 		inputFile = (args.length == 1 ? args[0] : "input.txt");
-		len = loadMap(inputFile);
-		if (len == -1) {
+		rawMap = FileManager.readFile(inputFile);
+		if (rawMap.len == -1) {
 			System.err.println("Error occured while reading the file");
 			return;
 		}
-		map = new ExcavationMap(rawMap);
+		map = new ExcavationMap(rawMap.str, rawMap.len);
+		System.out.println(map.data);
+		map.print();
+		FileManager.writeFile("output.txt", "\n");
 		return;
 	}
-
-	private static int loadMap(String filename) {
-		return 0;
-	}
-	
 }
