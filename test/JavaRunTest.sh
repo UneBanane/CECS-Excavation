@@ -67,7 +67,7 @@ for ((i=0; i<=$nb_test; i++))
 do
 	echo "------------------------------------ test $i starts ------------------------------------"
 	cp ./testfiles/input$i.txt ./input.txt
-	java Excavation.Excavation
+	(time java Excavation.Excavation) >> testReport.txt 2>&1
 	diff output.txt testFiles/output$i.txt
 	r=$?
 	if [ $r -eq 0 ]

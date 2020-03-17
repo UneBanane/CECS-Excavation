@@ -24,7 +24,6 @@ public class Excavation {
 			return;
 		}
 		map = new ExcavationMap(rawMap.str, rawMap.len);
-		// map.print();
 		_maxTotal = map.data[0];
 		algoLoop();
 		_min_x++;
@@ -40,15 +39,16 @@ public class Excavation {
 		int x1 = 0;
 		int x2;
 		int y;
+		int ycol;
 
 		while (x1 < map.width) {
 			x2 = x1;
 			summedCols = new int[map.height];
 			while (x2 < map.width) {
-				y = 0;
-				while (y < map.height) {
-					summedCols[y] += map.data[(y * map.width) + x2];
-					y++;
+				y = ycol = 0;
+				while (y < map.length - 1) {
+					summedCols[ycol++] += map.data[y + x2];
+					y += map.width;
 				}
 				findLargestLine(summedCols, x1, x2);
 				x2++;
@@ -59,24 +59,46 @@ public class Excavation {
 
 	private static void findLargestLine(int[] values, int x1, int x2) {
 		int y1 = 0;
-		int y2;
-		int val;
+		int y2 = 0;
+		int val = 0;
 
-		while (y1 < values.length) {
-			y2 = y1;
-			val = 0;
-			while (y2 < values.length) {
-				val += values[y2];
-				if (val > _maxTotal) {
-					_maxTotal = val;
-					_min_x = x1;
-					_max_x = x2;
-					_min_y = y1;
-					_max_y = y2;
-				}
-				y2++;
+		while (y2 < values.length) {
+			val += values[y2];
+			if (val < 0) {
+				val = 0;
+				y1 = y2 + 1;
 			}
-			y1++;
+			if (val > _maxTotal) {
+				_maxTotal = val;
+				_min_x = x1;
+				_max_x = x2;
+				_min_y = y1;
+				_max_y = y2;
+			}
+			y2++;
 		}
 	}
+
+	// private static void findLargestLine(int[] values, int x1, int x2) {
+	// 	int y1 = 0;
+	// 	int y2;
+	// 	int val;
+
+	// 	while (y1 < values.length) {
+	// 		y2 = y1;
+	// 		val = 0;
+	// 		while (y2 < values.length) {
+	// 			val += values[y2];
+	// 			if (val > _maxTotal) {
+	// 				_maxTotal = val;
+	// 				_min_x = x1;
+	// 				_max_x = x2;
+	// 				_min_y = y1;
+	// 				_max_y = y2;
+	// 			}
+	// 			y2++;
+	// 		}
+	// 		y1++;
+	// 	}
+	// }
 }
