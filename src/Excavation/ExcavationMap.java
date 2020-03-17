@@ -1,9 +1,7 @@
 package Excavation;
 
-import java.util.ArrayList;
-
 public class ExcavationMap {
-	ArrayList<Integer> data = new ArrayList<Integer>();
+	int[] data;
 	int width;
 	int height;
 	int length;
@@ -16,22 +14,41 @@ public class ExcavationMap {
 			return;
 		}
 		this.width = this.GetWidth(src);
-		if (this.width <= 0 || fill(src, len) == -1) {
+		if (this.width <= 0 || fill(src.toCharArray(), len) == -1) {
 			return;
 		}
+		this.height = this.length / this.width;
 	}
 
-	private int fill(String src, int len) {
+	private int fill(char[] src, int len) {
 		int idx = 0;
-		idx = src.indexOf("\n") + 1;
-		while (idx < len) {
-			data.add(Integer.parseInt(src.substring(idx, src.indexOf(' ', idx))));
-			idx = src.indexOf(' ', idx) + 1;
-			if (data.size() % this.width == 0) {
+		int dataIdx = 0;
+		int nb;
+		int neg;
+
+		data = new int[width * width];
+		while (src[idx] != '\n') {
+			idx++;
+		}
+		while (++idx < len) {
+			nb = 0;
+			if (src[idx] == '-') {
+				neg = -1;
+				idx++;
+			}
+			else {
+				neg = 1;
+			}
+			while (src[idx] != ' ') {
+				nb = (nb * 10) + (src[idx] - '0');
+				idx++;
+			}
+			data[dataIdx++] = nb * neg;
+			if (src[idx + 1] == '\n') {
 				idx += 1;
 			}
 		}
-		this.length = data.size();
+		this.length = data.length;
 		return 0;
 	}
 
@@ -50,14 +67,14 @@ public class ExcavationMap {
 		System.out.println("---------- Map print ---------- start");
 		Printer table = new Printer();
 		int i = 0;
-		while (i < data.size()) {
+		while (i < data.length) {
 			table.add(" ");
-			int len = Integer.toString(data.get(i)).length();
+			int len = Integer.toString(data[i]).length();
 			while (len < maxDigitSize) {
 				table.add(" ");
 				len++;
 			}
-			table.addInt(data.get(i));
+			table.addInt(data[i]);
 			table.add(" ");
 			i++;
 			if (i % this.width == 0) {
@@ -74,8 +91,8 @@ public class ExcavationMap {
 	private void getMaxDigit() {
 		int i = 0;
 		while (i < this.length) {
-			if (this.data.get(i).toString().length() > this.maxDigitSize) {
-				this.maxDigitSize = this.data.get(i).toString().length();
+			if (Integer.toString(this.data[i]).length() > this.maxDigitSize) {
+				this.maxDigitSize = Integer.toString(this.data[i]).length();
 			}
 			i++;
 		}

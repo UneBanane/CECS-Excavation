@@ -45,7 +45,9 @@ How to:
 	exit 1
 elif [ "$nb_test" == "-c" ]
 then
-	rm -fr resultList/ testReport
+	echo "removed resultList/ and testReport.txt"
+	rm -fr resultList/ testReport.txt
+	exit 1
 fi
 
 #ADAPT PATH HERE
@@ -63,7 +65,7 @@ inputList={testFiles/input.txt}
 
 for ((i=0; i<=$nb_test; i++))
 do
-	echo "------------------------------------ testt $i starts ------------------------------------"
+	echo "------------------------------------ test $i starts ------------------------------------"
 	cp ./testfiles/input$i.txt ./input.txt
 	java Excavation.Excavation
 	diff output.txt testFiles/output$i.txt
@@ -71,12 +73,12 @@ do
 	if [ $r -eq 0 ]
 	then
 		echo "input $i > OK." >> testReport.txt
-	elif [ $r -eq 1 ]
-	then
+	elif [ $r -ne 0 ]
+	then 
 		echo "input $i > KO." >> testReport.txt
 		diff output.txt testFiles/output$i.txt > resultList/result$i.txt
 	else
-		echo "input $i > diff Fail." >> testReport.txt
+		echo "input $i > diff_fail." >> testReport.txt
 	fi
 	cat output.txt 
 	cat testfiles/output$i.txt
